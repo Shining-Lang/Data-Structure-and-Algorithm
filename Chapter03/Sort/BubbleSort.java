@@ -8,8 +8,8 @@ public class BubbleSort {
         bubbleSort(arr);
     }
 
+    //冒泡排序时间复杂度为O(n^2)
     public static void bubbleSort(int[] arr) {
-        //冒泡排序时间复杂度为O(n^2)
         int temp = 0;
         boolean flag = false; //表示是否进行过交换
 
