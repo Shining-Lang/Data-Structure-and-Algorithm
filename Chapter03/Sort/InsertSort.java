@@ -23,7 +23,10 @@ public class InsertSort {
                 lastIndex--;
             }
             //如果上来要插入的数大于前一半最后一个数，那么就直接无任何变化；反之就要插入到空出来的那个位置了。
-            arr[lastIndex + 1] = insertValue;
+            if(lastIndex + 1 != i)
+            {
+                arr[lastIndex + 1] = insertValue;
+            }
 
             System.out.printf("The %d time sorting array is : ", i);
             System.out.println(Arrays.toString(arr));
