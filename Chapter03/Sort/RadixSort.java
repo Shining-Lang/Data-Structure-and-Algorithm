@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class RadixSort {
     public static void main(String[] args){
-        int[] arr = {53, -3, 542, 748, 14, 214};
+        int[] arr = {53, -3, 542, -748, 14, -214};
         radixSortWithNegative(arr);
     }
 
