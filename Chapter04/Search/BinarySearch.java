@@ -30,6 +30,7 @@ public class BinarySearch {
      * @param targetValue 要查找的值
      * @return 如果找到返回下标，没找到返回-1
      */
+    //只返回查找到的第一个目标值的下标
     public static int binarySearch(int[] arr, int left, int right, int targetValue){
         //当left > right时，说明递归整个数组但是没有找到。
         if(left > right){
@@ -50,6 +51,7 @@ public class BinarySearch {
         }
     }
 
+    //可以查找多个相同目标值的下标
     public static ArrayList<Integer> binarySearch2(int[] arr, int left, int right, int targetValue){
         //当left > right时，说明递归整个数组但是没有找到。
         if(left > right){
