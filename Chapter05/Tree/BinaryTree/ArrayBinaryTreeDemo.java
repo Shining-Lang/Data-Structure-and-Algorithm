@@ -20,7 +20,7 @@ public class ArrayBinaryTreeDemo {
     }
 }
 /**
- * 顺序存储binary tree 一般只考虑完全二叉树， 完全二叉树共有2^k - 1个元素， k表示二叉树的层数
+ * 顺序存储binary tree 一般只考虑完全二叉树， 完全二叉树共有2^(k-1) - 1 + x个元素， k表示二叉树的层数, x表示第k层的元素个数
  * index为n的元素，它的left child node's index is 2*n+1, right child node's index is 2*n+2,
  * parent node's index is (n-1)/2
  * */
