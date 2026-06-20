@@ -302,12 +302,12 @@ class HeroNode{
     public void deleteNode(int id){
         //如果当前节点的左子节点不为空，并且左子节点就是要删除的节点
         if(this.left != null && this.left.getId() == id){
-            this.left = null;
+            this.left = getReplacementNode(this.left);
             return;
         }
         //如果当前节点的右子节点不为空，并且右子节点就是要删除的节点
         if(this.right != null && this.right.getId() == id){
-            this.right = null;
+            this.right = getReplacementNode(this.right);
             return;
         }
         //向左子树进行递归删除
@@ -318,6 +318,34 @@ class HeroNode{
         if(this.right != null){
             this.right.deleteNode(id);
         }
+    }
 
+    private HeroNode getReplacementNode(HeroNode deletedNode){
+        // 情况1：叶子节点
+        if(deletedNode.left == null && deletedNode.right == null){
+            return null;
+        }
+
+        // 情况2：只有右子节点
+        if(deletedNode.left == null){
+            return deletedNode.right;
+        }
+
+        // 情况3：只有左子节点
+        if(deletedNode.right == null){
+            return deletedNode.left;
+        }
+
+        // 情况4：左右子节点都有，用左子节点替代 deletedNode
+        HeroNode replacementNode = deletedNode.left;
+
+        // 把原来的右子树接到 replacementNode 这棵树的最右边
+        HeroNode temp = replacementNode;
+        while(temp.right != null){
+            temp = temp.right;
+        }
+        temp.right = deletedNode.right;
+
+        return replacementNode;
     }
 }
