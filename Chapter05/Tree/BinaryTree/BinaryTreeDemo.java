@@ -1,6 +1,4 @@
-package Chapter05.Tree;
-
-import org.w3c.dom.Node;
+package Chapter05.Tree.BinaryTree;
 
 public class BinaryTreeDemo {
     public static void main(String[] args) {
