@@ -19,13 +19,13 @@ public class ThreadedBinaryTreeDemo {
 
         ThreadedBinaryTree threadedBinaryTree = new ThreadedBinaryTree();
         threadedBinaryTree.setRoot(root);
-        threadedBinaryTree.threadedNodes();
+        threadedBinaryTree.infixThreadedNodes();
 
         HeroNode left = node5.getLeft();
         System.out.println(left);
 
         System.out.println("using threaded way to show threaded binary tree: ");
-        threadedBinaryTree.threadedList();
+        threadedBinaryTree.infixThreadedList();
     }
 }
 
@@ -43,13 +43,18 @@ class ThreadedBinaryTree {
         return root;
     }
 
-    public void threadedNodes()
+    public void infixThreadedNodes()
     {
-        threadedNodes(root);
+        pre = null;
+        infixThreadedNodes(root);
     }
 
-    //遍历线索化binary tree的方法
-    public void threadedList() {
+    //遍历中序线索化binary tree的方法
+    /**
+     * 它是从中序遍历“先左、再自己、再右”推出来的：
+     * 先一路找最左；访问后能走线索就走线索；不能走线索时，说明遇到了真实右子树，于是进入右子树继续找最左。
+     * */
+    public void infixThreadedList() {
         HeroNode node = root;
         while (node != null) {
             // 找到当前子树中序遍历的第一个节点
@@ -71,13 +76,15 @@ class ThreadedBinaryTree {
     }
 
     //编写对binary tree进行中序线索化的方法
-    public void threadedNodes(HeroNode currentNode){
+    public void infixThreadedNodes(HeroNode currentNode){
         if(currentNode == null){
             return;
         }
 
         //先线索化左子树
-        threadedNodes(currentNode.getLeft());
+        if(currentNode.getLeftType() == 0) {
+            infixThreadedNodes(currentNode.getLeft());
+        }
         //线索化当前节点
         if(currentNode.getLeft() == null){
             currentNode.setLeft(pre);
@@ -92,7 +99,153 @@ class ThreadedBinaryTree {
         pre = currentNode;
 
         //线索化右子树
-        threadedNodes(currentNode.getRight());
+        if(currentNode.getRightType() == 0) {
+            infixThreadedNodes(currentNode.getRight());
+        }
+    }
+
+    public void preThreadedNodes()
+    {
+        pre = null;
+        preThreadedNodes(root);
+    }
+
+    //遍历前序线索化树
+    /**
+     * 前序线索化遍历的逻辑是：当前节点先打印；打印后，如果有真实左子树就进入左子树，否则沿着 right 找前序中的下一个节点。
+     * */
+    public void preThreadedList() {
+        HeroNode node = root;
+        while (node != null) {
+            System.out.println(node);
+            if(node.getLeftType() == 0) {
+                node = node.getLeft();
+            }
+            else {
+                node = node.getRight();
+            }
+        }
+    }
+
+    //编写对binary tree进行前序线索化的方法
+    public void preThreadedNodes(HeroNode currentNode){
+        if(currentNode == null){
+            return;
+        }
+
+        if(currentNode.getLeft() == null){
+            currentNode.setLeft(pre);
+            currentNode.setLeftType(1);
+        }
+        if(pre != null && pre.getRight() == null) {
+            pre.setRight(currentNode);
+            pre.setRightType(1);
+        }
+        pre = currentNode;
+
+        if(currentNode.getLeftType() == 0) {
+            preThreadedNodes(currentNode.getLeft());
+        }
+
+        if(currentNode.getRightType() == 0) {
+            preThreadedNodes(currentNode.getRight());
+        }
+    }
+
+    public void postThreadedNodes()
+    {
+        pre = null;
+        postThreadedNodes(root);
+    }
+
+    /**
+     * 1. 从 root 开始，找到后序遍历的第一个节点
+     * 2. 第一个节点一定是：
+     *    优先一路往左走；
+     *    如果没有左子树，就往右走；
+     *    直到走到叶子节点
+     *
+     * 3. 访问这个节点
+     *
+     * 4. 找它的后继：
+     *    如果 rightType == 1，说明 right 是后序后继线索，直接走
+     *    如果没有后继线索，就需要知道它的父节点，判断下一步该去哪
+     * */
+    public void postThreadedList() {
+        HeroNode currentNode = root;
+
+        while(currentNode != null && currentNode.getLeftType() == 0) {
+            currentNode = currentNode.getLeft();
+        }
+
+        while(currentNode != null) {
+            System.out.println(currentNode);
+
+            if(currentNode.getRightType() == 1) {
+                currentNode = currentNode.getRight();
+            } else {
+                HeroNode parent = currentNode.getParent();
+
+                if(parent == null) {
+                    currentNode = null;
+                } else if(parent.getRight() == currentNode || parent.getRightType() == 1 || parent.getRight() == null) {
+                    currentNode = parent;
+                } else {
+                    currentNode = parent.getRight();
+
+                    while(true) {
+                        if(currentNode.getLeftType() == 0) {
+                            currentNode = currentNode.getLeft();
+                        } else if(currentNode.getRightType() == 0) {
+                            currentNode = currentNode.getRight();
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void postThreadedList(HeroNode node) {
+        if(node == null) {
+            return;
+        }
+
+        if(node.getLeftType() == 0) {
+            postThreadedList(node.getLeft());
+        }
+
+        if(node.getRightType() == 0) {
+            postThreadedList(node.getRight());
+        }
+
+        System.out.println(node);
+    }
+
+    //编写对binary tree进行后序线索化的方法
+    public void postThreadedNodes(HeroNode currentNode) {
+        if(currentNode == null){
+            return;
+        }
+
+        if(currentNode.getLeftType() == 0) {
+            postThreadedNodes(currentNode.getLeft());
+        }
+
+        if(currentNode.getRightType() == 0) {
+            postThreadedNodes(currentNode.getRight());
+        }
+
+        if(currentNode.getLeft() == null){
+            currentNode.setLeft(pre);
+            currentNode.setLeftType(1);
+        }
+        if(pre != null && pre.getRight() == null) {
+            pre.setRight(currentNode);
+            pre.setRightType(1);
+        }
+        pre = currentNode;
     }
 
     //前序遍历
@@ -174,6 +327,8 @@ class HeroNode{
 
     private int leftType; //如果为0,则表示指向左子树；如果为1，则表示指向前驱节点
     private int rightType; //如果为0,则表示指向右子树；如果为1,则表示指向后继节点
+
+    private HeroNode parent;
 
     public HeroNode(int id, String name) {
         this.id = id;
@@ -389,5 +544,13 @@ class HeroNode{
 
     public void setRightType(int rightType) {
         this.rightType = rightType;
+    }
+
+    public HeroNode getParent() {
+        return parent;
+    }
+
+    public void setParent(HeroNode parent) {
+        this.parent = parent;
     }
 }
