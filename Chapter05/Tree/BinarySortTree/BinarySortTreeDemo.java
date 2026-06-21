@@ -45,6 +45,15 @@ class BinarySortTree{
         return target.value;
     }
 
+    public int deleteLeftMax(Node node) {
+        Node target = node;
+        while (target.right != null) {
+            target = target.right;
+        }
+        deleteNode(target.value);
+        return target.value;
+    }
+
     //删除节点
     public void deleteNode(int value) {
         if (root == null) {
@@ -87,6 +96,7 @@ class BinarySortTree{
             //如果删除的节点有左右两棵子树
             else if(targetNode.left != null && targetNode.right != null){
                 targetNode.value = deleteRightMin(targetNode.right);
+//                targetNode.value = deleteLeftMax(targetNode.left);
             }
             else{
                 //如果要删除的targetNode有左子节点
