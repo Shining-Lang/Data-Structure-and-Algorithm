@@ -3,7 +3,11 @@ package Chapter05.Tree.HuffmanTree;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HuffmanDemo {
+/**
+ * Huffman tree是给定n个权值作为n个叶子节点，，构造一棵二叉树
+ * 如果该树的带权路径长度（wpl）达到最小，那么就称这样的二叉树为最优二叉树，也成为哈夫曼树（Huffman Tree）。
+ * */
+public class HuffmanTreeDemo {
     public static void main(String[] args) {
         int[] arr = {13, 7, 8, 3, 29, 6, 1};
         Node root = createHuffmanTree(arr);
