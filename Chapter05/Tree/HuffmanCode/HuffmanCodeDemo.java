@@ -1,5 +1,6 @@
 package Chapter05.Tree.HuffmanCode;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -13,17 +14,62 @@ public class HuffmanCodeDemo {
     static StringBuilder stringBuilder = new StringBuilder();
 
     public static void main(String[] args) {
-        String content = "i like like like java do you like a java";
-        byte[] contentBytes = content.getBytes();
-        System.out.println(contentBytes.length);
-        byte[] huffmanCodeBytes = huffmanZip(contentBytes);
-        System.out.println(Arrays.toString(huffmanCodeBytes));
-        System.out.println(huffmanCodeBytes.length);
+//        String content = "i like like like java do you like a java";
+//        byte[] contentBytes = content.getBytes();
+//        System.out.println(contentBytes.length);
+//        byte[] huffmanCodeBytes = huffmanZip(contentBytes);
+//        System.out.println(Arrays.toString(huffmanCodeBytes));
+//        System.out.println(huffmanCodeBytes.length);
+//
+//        byte[] sourceBytes = decode(huffmanCodes, huffmanCodeBytes);
+//        String result = new String(sourceBytes);
+//        System.out.println(result);
 
-        byte[] sourceBytes = decode(huffmanCodes, huffmanCodeBytes);
-        String result = new String(sourceBytes);
-        System.out.println(result);
+        String srcFile = "Chapter05/Tree/HuffmanCode/test.jpg";
+        String zipFile = "Chapter05/Tree/HuffmanCode/test.zip";
+        String destFile = "Chapter05/Tree/HuffmanCode/test_unzip.jpg";
+        zipFile(srcFile, zipFile);
+        unzipFile(zipFile, destFile);
 
+    }
+
+    public static void unzipFile(String zipFile, String destFile) {
+        try(FileInputStream fis = new FileInputStream(zipFile);
+            ObjectInputStream ois = new ObjectInputStream(fis))
+        {
+            byte[] huffmanBytes = (byte[]) ois.readObject();
+            Map<Byte, String> huffmanCodes = (Map<Byte, String>) ois.readObject();
+
+            byte[] bytes = decode(huffmanCodes, huffmanBytes);
+
+            try(FileOutputStream fos = new FileOutputStream(destFile)) {
+                fos.write(bytes);
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //将一个文件进行压缩
+    public static void zipFile(String srcFile, String destFile){
+        try(FileInputStream fis = new FileInputStream(srcFile);
+            FileOutputStream fos = new FileOutputStream(destFile);
+            ObjectOutputStream oos = new ObjectOutputStream(fos))
+        {
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            //压缩源文件
+            byte[] huffmanCodeBytes = huffmanZip(buffer);
+            //把哈夫曼编码后的字节数组写入到压缩文件中去
+            oos.writeObject(huffmanCodeBytes);
+            //以对象流的的方式写入哈夫曼编码，为了我们之后恢复文件时使用
+            oos.writeObject(huffmanCodes);
+        }
+        catch (IOException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
