@@ -2,6 +2,7 @@ package Chapter05.Graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Graph {
 
@@ -29,13 +30,14 @@ public class Graph {
 
         graph.showGraph();
         graph.dfs();
+        System.out.println();
+        graph.bfs();
     }
 
     public Graph(int numberOfVertices){
         edges = new int[numberOfVertices][numberOfVertices];
         vertexList = new ArrayList<>(numberOfVertices);
         numOfEdges = 0;
-        isVisited = new boolean[numberOfVertices];
     }
 
     //得到第一个邻接节点的下标
@@ -72,8 +74,46 @@ public class Graph {
         }
     }
 
+    private void bfs(boolean[] isVisited, int i) {
+        int u; // 队列头节点对应的下标
+        int w; // 邻接节点下标
+        LinkedList<Integer> queue = new LinkedList<>();
+        // 访问当前节点
+        System.out.print(getValueByIndex(i) + "->");
+        isVisited[i] = true;
+        // 当前节点入队
+        queue.addLast(i);
+        while(!queue.isEmpty()) {
+            // 取出队列头节点
+            u = queue.removeFirst();
+            // 得到第一个邻接节点
+            w = getFirstNeighbor(u);
+
+            while(w != -1) {
+                if(!isVisited[w]) {
+                    System.out.print(getValueByIndex(w) + "->");
+                    isVisited[w] = true;
+                    // 已访问的邻接节点入队
+                    queue.addLast(w);
+                }
+                // 继续找 u 的下一个邻接节点
+                w = getNextNeighbor(u, w);
+            }
+        }
+    }
+
+    public void bfs() {
+        isVisited = new boolean[getNumOfVertex()];
+        for(int i = 0; i < getNumOfVertex(); i++){
+            if(!isVisited[i]){
+                bfs(isVisited, i);
+            }
+        }
+    }
+
     //对dfs函数进行重载
     public void dfs(){
+        isVisited = new boolean[getNumOfVertex()];
         for(int i = 0; i < getNumOfVertex(); i++){
             if(!isVisited[i]){
                 dfs(isVisited, i);
