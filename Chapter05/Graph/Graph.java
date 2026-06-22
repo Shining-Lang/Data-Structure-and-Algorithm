@@ -8,6 +8,10 @@ public class Graph {
     private ArrayList<String> vertexList;
     private int[][] edges;
     private int numOfEdges;
+
+    //定义一个boolean数组，记录某个节点是都被访问
+    private boolean[] isVisited;
+
     public static void main(String[] args) {
         int numOfVertices = 5;
         String[] vertices = {"A", "B", "C", "D", "E"};
@@ -24,12 +28,57 @@ public class Graph {
         graph.insertEdge(1, 4, 1);
 
         graph.showGraph();
+        graph.dfs();
     }
 
     public Graph(int numberOfVertices){
         edges = new int[numberOfVertices][numberOfVertices];
         vertexList = new ArrayList<>(numberOfVertices);
         numOfEdges = 0;
+        isVisited = new boolean[numberOfVertices];
+    }
+
+    //得到第一个邻接节点的下标
+    public int getFirstNeighbor(int index) {
+        for(int i = 0; i < vertexList.size(); i++){
+            if(edges[index][i] > 0){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //根据前一个邻接节点的下标来获取下一个邻接节点
+    public int getNextNeighbor(int v1, int v2){
+        for(int j = v2 + 1; j < vertexList.size(); j++){
+            if(edges[v1][j] > 0){
+                return j;
+            }
+        }
+        return -1;
+    }
+
+    private void dfs(boolean[] isVisited, int i){
+        System.out.print(getValueByIndex(i) + "->");
+        isVisited[i] = true;
+        //查找节点i得第一个邻接节点
+        int w = getFirstNeighbor(i);
+        while(w != -1){
+            if(!isVisited[w]){
+                dfs(isVisited, w);
+            }
+            //如果w节点已经被访问过，我们就应该去访问邻接点的下一个节点
+            w = getNextNeighbor(i, w);
+        }
+    }
+
+    //对dfs函数进行重载
+    public void dfs(){
+        for(int i = 0; i < getNumOfVertex(); i++){
+            if(!isVisited[i]){
+                dfs(isVisited, i);
+            }
+        }
     }
 
     public void showGraph(){
