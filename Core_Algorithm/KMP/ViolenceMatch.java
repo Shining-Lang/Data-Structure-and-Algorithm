@@ -1,4 +1,4 @@
-package KMP;
+package Core_Algorithm.KMP;
 
 public class ViolenceMatch {
     public static void main(String[] args) {
